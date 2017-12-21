@@ -15,8 +15,8 @@ def data():
     bdata = request.data
     if not bdata:
         return jsonify(), 400
-    bdata = bdata.decode('utf-8')
-    parsed_data = json.loads(bdata)
+    decoded_data = bdata.decode('utf-8')
+    parsed_data = json.loads(decoded_data)
     data, name, text = parsed_data.get('data'), parsed_data.get('name').get('value'), parsed_data.get('text')
     if not data or not name or not text:
         return jsonify(), 400
@@ -26,7 +26,7 @@ def data():
     with open(filename+'_raw.txt', 'w') as f:
         f.write(bdata)
     with open(filename+'_text.txt', 'w') as f:
-        f.write(name + '\n' + text)
+        f.write((name + '\n' + text).encode('utf-8'))
 
     data.sort(key=lambda x: [x['press'] == 'down', x['timestamp']])
     up, down = data[:len(data)//2], data[len(data)//2:]
@@ -61,4 +61,4 @@ def data():
     return jsonify({'down': filename+'_down.csv', 'up': filename+'_up.csv'})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=3306)

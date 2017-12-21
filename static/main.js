@@ -77,7 +77,7 @@ function onUp(e) {
     });
     counter++;
     counter_span.innerHTML = counter;
-    if (counter >= 10) {
+    if (counter >= 1500) {
         submit();
     }
 }
