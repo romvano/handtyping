@@ -3,6 +3,7 @@
  */
 
 presses = [];
+clicks = [];
 counter = 0;
 counter_span = document.getElementsByClassName('js-counter')[0];
 flag = false;
@@ -61,11 +62,12 @@ function submit() {
                 })
             }
         };
-        data = {name: result, data: presses, text: textarea.value};
+        data = {name: result, data: presses, text: textarea.value, clicks: clicks};
         xhttp.send(JSON.stringify(data));
         console.log('sent');
         textarea.onkeyup = function () {return false};
         textarea.onkeydown = function () {return false};
+        textarea.onclick = function () {return false};
     })
 }
 
@@ -77,7 +79,7 @@ function onUp(e) {
     });
     counter++;
     counter_span.innerHTML = counter;
-    if (counter >= 1500) {
+    if (counter >= 10) {
         submit();
     }
 }
@@ -90,7 +92,19 @@ function onDown(e) {
     })
 }
 
+function onClick() {
+    clicks.push({
+        position: textarea.selectionStart,
+        selected: textarea.selectionEnd - textarea.selectionStart,
+        direction: textarea.selectionDirection,
+        text_length: textarea.value.length,
+        letters: textarea.value.substring(textarea.selectionStart, textarea.selectionEnd),
+        previous_letter: textarea.value[textarea.selectionStart-1] || '',
+        next_letter: textarea.value[textarea.selectionEnd] || ''
+    });
+    alert(clicks)
+}
 
 textarea.onkeyup = onUp;
 textarea.onkeydown = onDown;
-
+textarea.onclick = onClick();

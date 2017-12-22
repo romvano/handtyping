@@ -17,15 +17,16 @@ def data():
         return jsonify(), 400
     decoded_data = bdata.decode('utf-8')
     parsed_data = json.loads(decoded_data)
-    data, name, text = parsed_data.get('data'), parsed_data.get('name').get('value'), parsed_data.get('text')
+    data, name = parsed_data.get('data'), parsed_data.get('name').get('value')
+    text, clicks = parsed_data.get('text'), parsed_data.get('clicks')
     if not data or not name or not text:
         return jsonify(), 400
     data.sort(key=lambda x: x['timestamp'])
     print(os.getcwd())
     filename = 'static/data/' + datetime.now().isoformat()
-    with open(filename+'_raw.txt', 'w') as f:
+    with open(filename+'_raw.txt', 'wb+') as f:
         f.write(bdata)
-    with open(filename+'_text.txt', 'w') as f:
+    with open(filename+'_text.txt', 'wb+') as f:
         f.write((name + '\n' + text).encode('utf-8'))
 
     data.sort(key=lambda x: [x['press'] == 'down', x['timestamp']])
@@ -58,7 +59,11 @@ def data():
         csvwriter = csv.DictWriter(f, up_data[0].keys())
         csvwriter.writeheader()
         csvwriter.writerows(up_data)
+    with open(filename+'clicks.csv', 'w+') as f:
+        csvwriter = csv.DictWriter(f, clicks[0].keys())
+        csvwriter.writeheader()
+        csvwriter.writerows(clicks)
     return jsonify({'down': filename+'_down.csv', 'up': filename+'_up.csv'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3306)
+    app.run(host='0.0.0.0')
