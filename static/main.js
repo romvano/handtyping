@@ -100,7 +100,8 @@ function onClick() {
         text_length: textarea.value.length,
         letters: textarea.value.substring(textarea.selectionStart, textarea.selectionEnd),
         previous_letter: textarea.value[textarea.selectionStart-1] || '',
-        next_letter: textarea.value[textarea.selectionEnd] || ''
+        next_letter: textarea.value[textarea.selectionEnd] || '',
+        timestamp: Date.now(),
     });
     alert(clicks)
 }
