@@ -103,7 +103,6 @@ function onClick() {
         next_letter: textarea.value[textarea.selectionEnd] || '',
         timestamp: Date.now(),
     });
-    alert(clicks)
 }
 
 textarea.onkeyup = onUp;
